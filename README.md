@@ -1,3 +1,3 @@
 # Clawmouse
 
-A clawmachine which acts as a mouse and reimporses reimburses it's fellow human.
+A clawmachine which acts as a mouse and reimburses it's fellow human.
