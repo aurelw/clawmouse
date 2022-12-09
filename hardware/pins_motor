@@ -1,6 +1,42 @@
-    5   6   7
+       -Pins-
+| 
+S     5   6   7
+W
+I fw  0   -   1
+T
+C bw  -   1   0
+H
+|
 
-le  0   -   1
+fw = left
+bw = right
 
-ri  -   1   0
+       -Pins-
+| 
+S     A   B   C
+W
+I fw  0   -   1
+T
+C bw  -   1   0
+H
+|
 
+fw = back
+bw = right
+
+
+0 = GND
+1 = V+
+- = floating
+
+
+RIBON CABLE:
+
+5 - brown
+6 - red
+7 - orange
+A - yellow
+B - green
+C - blue
+1 - purple
+2 - gray
