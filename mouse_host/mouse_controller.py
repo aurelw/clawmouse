@@ -74,7 +74,10 @@ class MouseMover:
                     elif move_y < 1 and move_y >= 0:
                         move_y = 1
                 # move mouse
-                pyautogui.move(move_x, move_y, _pause=False)
+                try:
+                    pyautogui.move(move_x, move_y, _pause=False)
+                except pyautogui.FailSafeException:
+                    print("[error] mouse move failsave.")
             # also scale the sleep with the accerlation
             time.sleep(self._update_interval / self._dd)
 
