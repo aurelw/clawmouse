@@ -18,6 +18,9 @@ class ClickPayer:
         self._thread = None
         self._currently_paying = False
 
+    def reset(self):
+        self._n_clicks = -1
+
     def do_click(self):
         if self._n_clicks < self._click_thresh:
             self._n_clicks += 1
@@ -59,6 +62,8 @@ class MyHandler(SimpleHTTPRequestHandler):
             qs = urlparse.parse_qs(tmp)
         if "image_click" in path:
             click_payer.do_click()
+        elif "page_load" in path:
+            click_payer.reset()
 
 
 if __name__ == "__main__":
