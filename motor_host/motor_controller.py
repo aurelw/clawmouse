@@ -8,31 +8,44 @@ import serial
 
 class ClawMover:
 
-    def __init__(self, serial_device_path):
+    def __init__(self, serial_device_path, do_reconnect=True,
+                 do_disconnect=False):
         self._serial_device_path = serial_device_path
         self._serial_con = None
-        self._baudrate = 19200
+        self._baudrate = 38400
+        self._do_reconnect = do_reconnect
+        self._do_disconnect = do_disconnect
 
     def connect(self):
-        return
         if not self._serial_con or not self._serial_con.isOpen():
             self._serial_con = \
                     serial.Serial(self._serial_device_path,
                                   self._baudrate)
 
+    def reconnect(self):
+        if self.is_connected():
+            self._serial_con.close()
+            self._serial_con = None
+        self.connect()
+
     def is_connected(self):
-        return
         return (self._serial_con and self._serial_con.isOpen())
 
     def send_sequence_str(self, sequence_str, retries=5):
-        print(sequence_str)
-        return
+        if self._do_reconnect:
+            self.reconnect()
         for i in range(retries):
             ascii_str = (sequence_str + '\n').encode('ascii')
-            serial_con.writelines([ascii_str])
-            rep = str(serial_con.readline())
-            if not "ERROR" in rep:
+            print("send cmd:", ascii_str)
+            self._serial_con.writelines([ascii_str])
+            rep = str(self._serial_con.readline())
+            if not "ERROR" in rep and not "NOCMD" in rep:
+                print("Send cmd OK.")
                 break
+            else:
+                print("error sending cmd retry..")
+        if self._do_disconnect:
+            self._serial_con.close()
 
     def sequence_to_sequence_str(self, sequence):
         header = "PLAY;"
@@ -59,30 +72,38 @@ class ClawMover:
         self.send_sequence_str(sequence_str)
 
     def mv_home(self):
-        sequence = [('X', 'B', 8000),
-                    ('Y', 'B', 8000)]
+        sequence = [('X', 'F', 8000),
+                    ('Y', 'F', 9000)]
         self.send_sequence(sequence)
 
     def mv_grab_position(self):
-        sequence = [('X', 'F', 2000),
-                    ('Y', 'F', 2500)]
+        sequence = [('X', 'B', 2000),
+                    ('Y', 'B', 2500)]
         self.send_sequence(sequence)
 
     def mv_grab(self):
         sequence = [('Z', 'F', 4000),
                     ('Z', 'P', 2000),
-                    ('Z', 'B', 4000)]
+                    ('Z', 'B', 4070)]
         self.send_sequence(sequence)
 
     def mv_drop_position(self):
-        sequence = [('X', 'F', 6000),
-                    ('Y', 'F', 6000)]
+        sequence = [('X', 'B', 6000),
+                    ('Y', 'B', 6000)]
         self.send_sequence(sequence)
 
     def mv_release(self):
         sequence = [('Z', 'F', 1000),
                     ('Z', 'P', 2000),
                     ('Z', 'B', 1000)]
+        self.send_sequence(sequence)
+
+    def mv_z_step_up(self):
+        sequence = [('Z', 'B', 100)]
+        self.send_sequence(sequence)
+
+    def mv_z_step_down(self):
+        sequence = [('Z', 'F', 100)]
         self.send_sequence(sequence)
 
 
@@ -92,7 +113,7 @@ def main():
                     prog = "Claw Motor Controler",
                     description = "Controls varios movements of a claw machine")
     parser.add_argument('--device_path', default='/dev/ttyUSB0')
-    parser.add_argument('--action', choices=['home', 'give_food', 'drop_test'])
+    parser.add_argument('--action', choices=['home', 'give_food', 'drop', 'move_grab', 'grab', 'move_drop_position', 'z_up', 'z_down'])
     args = parser.parse_args()
     # initialize mover
     claw_mover = ClawMover(args.device_path)
@@ -103,16 +124,26 @@ def main():
             claw_mover.mv_home()
         elif args.action == 'give_food':
             claw_mover.mv_grab_position()
-            time.sleep(0.5)
+            time.sleep(1)
             claw_mover.mv_grab()
-            time.sleep(0.5)
+            time.sleep(1)
             claw_mover.mv_drop_position()
             time.sleep(0.5)
             claw_mover.mv_release()
             time.sleep(2.0)
             claw_mover.mv_home()
-        elif args.action == 'drop_test':
+        elif args.action == 'drop':
             claw_mover.mv_release()
+        elif args.action == 'move_grab':
+            claw_mover.mv_grab_position()
+        elif args.action == 'move_drop_position':
+            claw_mover.mv_drop_position()
+        elif args.action == 'grab':
+            claw_mover.mv_grab()
+        elif args.action == 'z_down':
+            claw_mover.mv_z_step_down()
+        elif args.action == 'z_up':
+            claw_mover.mv_z_step_up()
             
 
 if __name__ == "__main__":
