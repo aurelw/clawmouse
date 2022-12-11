@@ -13,7 +13,7 @@
         }
         .center-fit {
             max-width: 100%;
-            max-height: 90vh;
+            max-height: 85vh;
             margin: auto;
         }
         .button {
@@ -21,6 +21,9 @@
             color: #FFFFFF;
             padding: 10px;
             border-radius: 10px;
+            width: 300px;
+            height: 70px;
+            margin: 10px;
             -moz-border-radius: 10px;
             -webkit-border-radius: 10px;
         }
@@ -32,11 +35,7 @@
 
     <button class="button" type="button"
         onclick="set_next_image()" id="btnID">
-        Show Image
-    </button>
-    <button class="button" type="button"
-        onclick="set_next_image()" id="btnID">
-        Show Image
+        Next Image
     </button>
     <div class="imgbox">
         <!-- Add id to image -->
@@ -45,6 +44,14 @@
     </div>
  
 <script>
+
+function http_get(url) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", url, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+}
+
 
 function get_random_image() {
   images = [
@@ -101,6 +108,7 @@ function set_next_image() {
     let img_path = get_random_image();
     let image = document.getElementById("image")
     image.src = img_path
+    http_get("http://localhost:7777/image_click")
 }
 
 
