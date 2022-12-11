@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+ 
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .imgbox {
+            display: grid;
+            height: 90%;
+        }
+        .center-fit {
+            max-width: 100%;
+            max-height: 90vh;
+            margin: auto;
+        }
+        .button {
+            background-color: #000000;
+            color: #FFFFFF;
+            padding: 10px;
+            border-radius: 10px;
+            -moz-border-radius: 10px;
+            -webkit-border-radius: 10px;
+        }
+    </style>
+
+</head>
+ 
+<body>
+
+    <button class="button" type="button"
+        onclick="set_next_image()" id="btnID">
+        Show Image
+    </button>
+    <button class="button" type="button"
+        onclick="set_next_image()" id="btnID">
+        Show Image
+    </button>
+    <div class="imgbox">
+        <!-- Add id to image -->
+        <img class="center-fit" id="image" src="./images/n_bean_bags_xerox.jpg"
+            alt="GFG image" />
+    </div>
+ 
+<script>
+
+function get_random_image() {
+  images = [
+    "n_baum_faellung_linz.jpg",
+    "n_baustelle_sitzen.webp",
+    "n_bean_bags_xerox.jpg",
+    "n_cable_horror.png",
+    "n_cashier_taking_to_old_lady.jpg",
+    "n_coffee_01.jpg",
+    "n_hand_shoveling.jpg",
+    "n_lieferando_on_brake.webp",
+    "n_linzer_auge.jpg",
+    "n_meeting_no_attention.webp",
+    "n_office_sleeping.jpg",
+    "n_office_tv_fight_scene.jpg",
+    "n_paint_spill.jpg",
+    "n_parcel_sorting.jpeg",
+    "n_qatar_worker_sitting.jpg",
+    "n_solitr_01.jpeg",
+    "n_stadtwache.jpg",
+    "n_stau_01.jpg",
+    "n_steel_workers_brake_01.webp",
+    "n_the_office_sleeping.jpg",
+    "n_trollfarm_01.jpg",
+    "n_trucks_in_jam.webp",
+    "n_twitter_worker_sleeping.jpeg",
+    "n_two_digit_keyboard.png",
+    "n_wall_mart_fighting.webp",
+    "n_weighter_drops_beer.jpg",
+    "n_westring_opening.jpg",
+    "n_workers_break_01.jpg",
+    "n_workers_break_02.jpg",
+    "n_workers_qatar_sleeping.jpeg",
+    "n_workers_watching_others_01,jpg",
+    "p_annotation_workers_02.jpg",
+    "p_baumpflanzung_linz.jpg",
+    "p_baustelle.jpeg",
+    "p_bob_ross.webp",
+    "p_data_annotation_01.png",
+    "p_dog_walker.webp",
+    "p_forklift_01.jpg",
+    "p_leave_blower_01.jpg",
+    "p_lieferando_fast.jpg",
+    "p_liegerad.jpg",
+    "p_office_01.jpg",
+    "p_stone_worker_01.webp",
+    "p_street_cleaning_bike.jpg",
+    "p_tram_01.webp"]
+    var rand_i = Math.floor(Math.random() * images.length)
+    return "./images/" + images[rand_i]
+}
+
+function set_next_image() {
+    let img_path = get_random_image();
+    let image = document.getElementById("image")
+    image.src = img_path
+}
+
+
+</script>
+</body>
+ 
+</html>
