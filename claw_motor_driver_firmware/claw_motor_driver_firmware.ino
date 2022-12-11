@@ -57,7 +57,7 @@ void setup() {
     digitalWrite(RELAY_7_PIN, HIGH);
     pinMode(RELAY_8_PIN, OUTPUT);
     digitalWrite(RELAY_8_PIN, HIGH);
-    Serial.begin(9600);           // set up Serial library at 9600 bps
+    Serial.begin(38400);           // set up Serial library at 9600 bps
 }
 
 
@@ -230,14 +230,16 @@ void loop() {
     /* check for command */
     if (serial_line.substring(0, 5) == "PLAY;") {
         if (serial_line.substring(serial_line.length() - 5, serial_line.length()) == "YALP;") {
-            String play_command = serial_line.substring(5, serial_line.length()-5);
+            serial_line = serial_line.substring(5, serial_line.length()-5);
+            play_sequence(serial_line);
             Serial.println("[OK]");
-            play_sequence(play_command);
         } else {
             Serial.println("[ERROR]");
         }
+    } else {
+        Serial.println("[NOCMD]");
     }
     //play_sequence("XF3000;XP0100;YF2000;YP0100;ZF2000;ZP1000;ZB2000;ZP0100;XB3000;XP0100;");
     //Serial.println("loop done");
-    delay(100);
+    delay(500);
 }
