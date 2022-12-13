@@ -28,9 +28,9 @@
             -webkit-border-radius: 10px;
         }
         .coveringCanvas {
+            width:90%; height:90%; 
+            position:relative; top:0px; left:0px;
             background-color: rgba(255,0,0,.1);
-            width: 100%;
-            height: 100%;
         }
     </style>
 
@@ -46,7 +46,7 @@
         <!-- Add id to image -->
         <img class="center-fit" id="image" src="./images/intro_screen.jpg"
             alt="GFG image" />
-        <canvas id=coveringCanvas></canvas>
+        <canvas id="covering_canvas" class=coveringCanvas></canvas>
     </div>
  
 <script>
