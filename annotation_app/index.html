@@ -8,13 +8,41 @@
             padding: 0;
         }
         .imgbox {
-            display: grid;
-            height: 90%;
+            display: flex;
+            justify-content: center;
+            justify-items: center;
         }
-        .center-fit {
+        .imgbox .imgbox-inner {
+            flex-grow: 0;
+            flex-shrink: 1;
+            border: 1px solid red;
+            position: relative;
+        }
+        .imgbox .img {
+            display: block;
             max-width: 100%;
             max-height: 85vh;
-            margin: auto;
+        }
+        .imgbox .overlay {
+            position: absolute;
+            z-index: 100;
+            inset: 0;
+            background-color: rgba(255,0,0,.1);
+        }
+        .imgbox .dots {
+        }
+        .imgbox .dot {
+            position: absolute;
+            z-index: 150;
+            opacity: .8;
+            width: 16px;
+            height: 16px;
+            border: 1px solid green;
+            background: lightgreen;
+            /* square with 50% radius is a circle */
+            border-radius: 50%;
+            /* absolute position is at top left corner, so move it -50% to center */
+            transform: translate(-50%, -50%);
         }
         .button {
             background-color: #000000;
@@ -27,28 +55,24 @@
             -moz-border-radius: 10px;
             -webkit-border-radius: 10px;
         }
-        .coveringCanvas {
-            width:90%; height:90%; 
-            position:relative; top:0px; left:0px;
-            background-color: rgba(255,0,0,.1);
-        }
     </style>
 
 </head>
  
 <body>
 
-    <button class="button" type="button"
-        onclick="set_next_image()" id="btnID">
+    <button class="button" type="button" onclick="set_next_image()" id="btnID">
         Next Image
     </button>
     <div class="imgbox">
-        <!-- Add id to image -->
-        <img class="center-fit" id="image" src="./images/intro_screen.jpg"
-            alt="GFG image" />
-        <canvas id="covering_canvas" class=coveringCanvas></canvas>
+        <div class="imgbox-inner">
+            <!-- Add id to image -->
+            <img class="img" id="image" src="./images/intro_screen.jpg" alt="GFG image" />
+            <div class="overlay"></div>
+            <div class="dots"></div>
+        </div>
     </div>
- 
+
 <script>
 
 function shuffleArray(array) {
@@ -130,8 +154,21 @@ function set_next_image() {
     let img_path = get_random_image();
     let image = document.getElementById("image")
     image.src = img_path
+    document.querySelector(".imgbox-inner .dots").innerHTML = ""
     http_get("http://localhost:7777/image_click")
 }
+
+
+document.querySelector(".imgbox-inner").addEventListener("click", (e) => {
+    e.preventDefault()
+    const imgboxInner = e.currentTarget
+    const imgboxDots = imgboxInner.parentNode.querySelector(".dots")
+    const percentage = {
+        x: e.offsetX / imgboxInner.offsetWidth * 100,
+        y: e.offsetY / imgboxInner.offsetHeight * 100,
+    }
+    imgboxDots.innerHTML += `<div class="dot" style="left: ${percentage.x}%; top: ${percentage.y}%;"></div>`
+})
 
 
 http_get("http://localhost:7777/page_load")
